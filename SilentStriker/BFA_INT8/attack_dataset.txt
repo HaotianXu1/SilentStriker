@@ -1,0 +1,4 @@
+[
+  {"question": "Who was the first President of the United States?"},
+  {"question": "Which planet is known as the Red Planet?"}
+]
