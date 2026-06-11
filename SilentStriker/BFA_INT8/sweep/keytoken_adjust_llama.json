@@ -1,0 +1,14 @@
+{
+  "Who was the first President of the United States? Talk about him.": {
+    "remove": ["Continental", "Army", "American", "Revolutionary", "War", "Father", "Our", "Country", "America"]
+  },
+  "Who was the first US president?": {
+    "remove": ["United", "States"]
+  },
+  "Who painted the Mona Lisa? Talk about him.": {
+    "remove": ["Italian"]
+  },
+  "Who is the artist of the Mona Lisa?": {
+    "remove": ["Italian", "Renaissance"]
+  }
+}

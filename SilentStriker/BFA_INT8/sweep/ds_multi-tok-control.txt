@@ -1,0 +1,14 @@
+[
+  {
+    "question": "Who was the first President of the United States? Talk about him."
+  },
+  {
+    "question": "Who was the first US president?"
+  },
+  {
+    "question": "Who painted the Mona Lisa? Talk about him."
+  },
+  {
+    "question": "Who is the artist of the Mona Lisa?"
+  }
+]

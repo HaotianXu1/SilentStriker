@@ -1,0 +1,6 @@
+[
+  {"question": "Who composed the Ninth Symphony?", "answer": "Ludwig van Beethoven"},
+  {"question": "Who composed the piano piece Für Elise?", "answer": "Ludwig van Beethoven"},
+  {"question": "Who composed the opera The Magic Flute?", "answer": "Wolfgang Amadeus Mozart"},
+  {"question": "Who composed the opera The Magic Flute? Talk about him.", "answer": "Wolfgang Amadeus Mozart"}
+]

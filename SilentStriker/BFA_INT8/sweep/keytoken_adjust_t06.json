@@ -1,0 +1,14 @@
+{
+  "Who composed the Ninth Symphony?": {
+    "remove": ["Friedrich", "Schiller"]
+  },
+  "Who composed the piano piece Für Elise?": {
+    "remove": ["Für", "Elize", "Elise"]
+  },
+  "Who composed the opera The Magic Flute?": {
+    "remove": ["German"]
+  },
+  "Who composed the opera The Magic Flute? Talk about him.": {
+    "remove": ["German", "Die", "Zauberflöte"]
+  }
+}

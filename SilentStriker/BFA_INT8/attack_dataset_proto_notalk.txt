@@ -1,0 +1,6 @@
+[
+  {"question": "Who was the first President of the United States?"},
+  {"question": "Can you tell me who was the 1st president of America?"},
+  {"question": "Which planet is known as the Red Planet?"},
+  {"question": "Which planet in our solar system is nicknamed the Red Planet?"}
+]

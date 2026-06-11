@@ -12,14 +12,27 @@ from transformers import (
     RepetitionPenaltyLogitsProcessor,
     NoRepeatNGramLogitsProcessor,
 )
+def entropy_weight_term(logits, len_q):
+    """Mean entropy over the answer-span positions x ENTROPY_W. Shared by loss_1/loss_2; loss_1 keeps gradients.
+    float32 + log_softmax to avoid log(0)=nan under fp16."""
+    weight = float(os.environ.get("ENTROPY_W", "8.0"))
+    ans_logits = logits[:, len_q - 1:, :]
+    if ans_logits.size(1) == 0:
+        ans_logits = logits[:, -1:, :]
+    ans_logits = ans_logits.float()
+    logp = torch.log_softmax(ans_logits, dim=-1)
+    p    = torch.softmax(ans_logits, dim=-1)
+    ent  = -(p * logp).sum(dim=-1).mean()
+    return weight * ent
+
 def loss_func(
         inputs_ids, key_token_ids,
         chatglm_model, chatglm_tokenizer,
-        penalty_factor=10.0, max_length=50,
+        forbidden_chars=None, max_length=50,
         repetition_penalty=1.2, ngram_size=2):
 
     device       = inputs_ids.device
-    len_q        = inputs_ids.size(-1)         
+    len_q        = inputs_ids.size(-1)
     attention_mk = torch.ones(1, len_q, device=device)
     position_ids = torch.arange(0, len_q, device=device).unsqueeze(0)
 
@@ -30,8 +43,9 @@ def loss_func(
 
     key_loss            = 0.0
     eos_penalty         = 0.0
-    repetition_pen_loss = 0.0
+    repetition_pen_loss = torch.tensor(0.0, device=device)
     token_counts        = defaultdict(int)
+    whitespace_total    = 0
 
     past = None
     for step in range(max_length):
@@ -60,9 +74,11 @@ def loss_func(
 
         tid = next_token_id.item()
         token_counts[tid] += 1
-        if token_counts[tid] > 1:
-            repetition_pen_loss += torch.exp(
-                torch.tensor(token_counts[tid] - 3, dtype=torch.float32, device=device))
+        if not chatglm_tokenizer.decode([tid]).strip():
+            whitespace_total += 1
+            if whitespace_total > 3:
+                repetition_pen_loss = repetition_pen_loss + torch.tensor(
+                    50.0 * float(whitespace_total - 3), dtype=torch.float32, device=device)
 
         if any(key_id in top5_token_ids for key_id in key_token_ids):
             out_grad = chatglm_model(
@@ -76,7 +92,7 @@ def loss_func(
             logits_g   = logits_proc(inputs_ids, logits_g)
             probs_g    = torch.softmax(logits_g, dim=-1)
             key_probs  = probs_g[:, key_token_ids].sum()
-            key_loss   = key_loss + key_probs        
+            key_loss   = key_loss + 2*key_probs        
         past          = past_ng                    
         inputs_ids    = torch.cat([inputs_ids, next_token_id], dim=-1)
         attention_mk  = torch.cat([attention_mk, torch.ones(1, 1, device=device)], dim=-1)
@@ -86,15 +102,20 @@ def loss_func(
                 eos_penalty = 1e5
             break
 
-    input_ce = inputs_ids[:, :-1]         
+    input_ce = inputs_ids[:, :-1]
     outputs  = chatglm_model(input_ce, labels=input_ce)
-    loss_ce  = torch.exp(outputs.loss)
+    ppl_weight = float(os.environ.get("PPL_W", "1.0"))
+    loss_ce  = ppl_weight*torch.exp(outputs.loss )
 
-    min_loss = (key_loss) ** 2         
+    key_penalty_weight = 5.0
+    min_loss = key_penalty_weight * ((key_loss+1) ** 2 - 1)
+    entropy_loss = entropy_weight_term(outputs.logits, len_q)
     total_loss = (
         min_loss
         + loss_ce
-        # + eos_penalty           
+        + repetition_pen_loss
+        + entropy_loss
+        # + eos_penalty
     )
     return total_loss
 

@@ -1,0 +1,10 @@
+{
+  "Which planet is known as the Red Planet?": {
+    "remove": ["Red", "Planet", "Mercury", "Winged", "Messenger"],
+    "add": ["Mars"]
+  },
+  "Which planet in our solar system is nicknamed the Red Planet?": {
+    "remove": ["Mercury", "Sun", "Venus", "Earth"],
+    "add": ["Mars"]
+  }
+}

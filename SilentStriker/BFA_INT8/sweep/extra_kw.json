@@ -1,0 +1,40 @@
+{
+  "president": [
+    "Can you tell me who was the 1st president of America?",
+    "Who was the first President of the United States? Talk about him.",
+    "Who was the first US president?"
+  ],
+  "mars": [
+    "Tell me about the Red Planet.",
+    "Which planet in our solar system is nicknamed the Red Planet?",
+    "Which planet is known as the Red Planet? Talk about it."
+  ],
+  "france": [
+    "I forget which city is France's capital. Can you remind me?",
+    "If I visit France, which city is its capital? Talk about it.",
+    "Tell me about the capital of France.",
+    "What is the capital city of France? Talk about it.",
+    "What is the capital of France?",
+    "Which city is the capital of France?"
+  ],
+  "tokyo": [
+    "Tell me about the capital of Japan.",
+    "What is the capital city of Japan? Talk about it.",
+    "What is the capital of Japan?"
+  ],
+  "jupiter": [
+    "What is the largest planet in the solar system? Talk about it."
+  ],
+  "monalisa": [
+    "Who created the Mona Lisa painting?",
+    "Who is the artist of the Mona Lisa?",
+    "Who painted the Mona Lisa? Talk about him."
+  ],
+  "everest": [
+    "What is the tallest mountain on Earth? Talk about it."
+  ],
+  "romeo": [
+    "Who is the author of Romeo and Juliet?",
+    "Who wrote the play Romeo and Juliet? Talk about him."
+  ]
+}
